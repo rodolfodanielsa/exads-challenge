@@ -122,6 +122,41 @@ class TvSeriesControllerTest extends TestCase
         ClockMock::withClockMock(false);
     }
 
+    public function testTvSeriesShouldReturnTheSameDateAsInputDateInThePast(): void
+    {
+        ClockMock::register(TvSeriesService::class);
+        $currentDateTime = new \DateTimeImmutable('2024-01-22 12:00:00');
+        ClockMock::withClockMock($currentDateTime->getTimestamp());
+
+        $dataImporter = $this->createMock(DataImporter::class);
+        $tvSeriesRepo = $this->createMock(TvSeriesRepository::class);
+        $result = new \ArrayObject([
+            [
+                'title' => 'Naruto',
+                'week_day' => 1,
+                'show_time' => '20:00',
+            ],
+            [
+                'title' => 'CSI',
+                'week_day' => 3,
+                'show_time' => '21:00',
+            ]
+        ]);
+        $tvSeriesRepo->method('findTvSeriesByInterval')
+            ->willReturn($result);
+
+        $tvSeriesService = new TvSeriesService($tvSeriesRepo);
+        $controller = new TvSeriesController($dataImporter, $tvSeriesService);
+
+        $response = $controller->index(new \DateTime('2023-12-25 10:00'));
+        $this->assertEquals(
+            'Next show(s) to be aired:'
+            . "\n" . '- Naruto, on Monday, December 25, 2023 20:00',
+            $response->getContent()
+        );
+        ClockMock::withClockMock(false);
+    }
+
     public function testTvSeriesShouldReturnTheFirstShowToAirInTheWeekDueToInputDateNotReturningResults(): void
     {
         ClockMock::register(TvSeriesService::class);

@@ -28,6 +28,25 @@ class ABTestingControllerTest extends TestCase
         $this->assertEquals(json_encode([], JSON_THROW_ON_ERROR), $response->getContent());
     }
 
+    public function testShouldReturnEmptyIfPromoIdDoesNotExist(): void
+    {
+        $manager = $this->createPartialMock(
+            ABTestingManager::class,
+            ['getDesigns']
+        );
+
+        $manager->method('getDesigns')
+            ->willReturn([]);
+
+        $service = new ABTestingService($manager);
+        $controller = new ABTestingController($service);
+
+        $promoId = 4;
+
+        $response = $controller->index($promoId);
+        $this->assertEquals(json_encode([], JSON_THROW_ON_ERROR), $response->getContent());
+    }
+
     public function testShouldReturnDesign1ForPromoId1AndPercentageIs63(): void
     {
         $manager = $this->createPartialMock(
