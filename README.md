@@ -27,33 +27,33 @@ Run `docker exec php php bin/phpunit`
 `docker exec php php bin/console app:ascii-array`
 
 ### TV Series
-Import Data
+- Import Data
 
 `docker exec php php bin/console app:tvseries:import`
 
-Execute command
+- Execute command
 
 `docker exec php php bin/console app:tvseries:next`
 
-With Specific Date
+- With Specific Date
 
 `docker exec php php bin/console app:tvseries:next --date="Y-m-d H:i"`
 
-With Specific Title
+- With Specific Title
 
 `php bin/console app:tvseries:next --title="Some Title"`
 
-With Specific Date and Title
+- With Specific Date and Title
 
 `php bin/console app:tvseries:next  --date="Y-m-d H:i" --title="Some Title"`
 
 ### A/B Testing
 
-Default promotion ID (1)
+- Execute command without promotion ID (1 is the default)
 
 `docker exec php php bin/console app:ab-testing`
 
-With input promotion ID
+- With input promotion ID
 
 `docker exec php php bin/console app:ab-testing --promoId=2`
 
