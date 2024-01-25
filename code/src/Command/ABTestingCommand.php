@@ -5,15 +5,13 @@ namespace App\Command;
 use App\Controller\ABTestingController;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Style\SymfonyStyle;
 
 #[AsCommand(
-    name: 'app:abtesting',
-    description: 'Add a short description for your command',
+    name: 'app:ab-testing',
+    description: 'Return designs of given promotion ID using an A/B testing system',
 )]
 class ABTestingCommand extends Command
 {
@@ -25,16 +23,14 @@ class ABTestingCommand extends Command
     protected function configure(): void
     {
         $this
-            ->addArgument('arg1', InputArgument::OPTIONAL, 'Argument description')
-            ->addOption('option1', null, InputOption::VALUE_NONE, 'Option description')
+            ->addOption('promoId', '', InputOption::VALUE_REQUIRED, 'Promotion ID', 1)
         ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $responseText = $this->ABTestingController->index(1);
+        $responseText = $this->ABTestingController->index($input->getOption('promoId'));
 
-        // Output the text to the console
         $output->writeln($responseText);
         return Command::SUCCESS;
     }

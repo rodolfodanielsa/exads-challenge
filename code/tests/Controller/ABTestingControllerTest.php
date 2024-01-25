@@ -25,7 +25,7 @@ class ABTestingControllerTest extends TestCase
         $promoId = 1;
 
         $response = $controller->index($promoId);
-        $this->assertEquals('', $response->getContent());
+        $this->assertEquals(json_encode([], JSON_THROW_ON_ERROR), $response->getContent());
     }
 
     public function testShouldReturnDesign1ForPromoId1AndPercentageIs63(): void
@@ -53,7 +53,10 @@ class ABTestingControllerTest extends TestCase
         $promoId = 1;
 
         $response = $controller->index($promoId);
-        $this->assertEquals('1 Design 1 65', $response->getContent());
+        $this->assertEquals(
+            json_encode(['designId' => 1, 'designName' => 'Design 1', 'splitPercent' => 65], JSON_THROW_ON_ERROR),
+            $response->getContent()
+        );
     }
 
     public function testShouldReturnDesign3ForPromoId1AndPercentageIs85(): void
@@ -79,8 +82,11 @@ class ABTestingControllerTest extends TestCase
         $controller = new ABTestingController($service);
 
         $promoId = 1;
-
         $response = $controller->index($promoId);
-        $this->assertEquals('3 Design 3 20', $response->getContent());
+
+        $this->assertEquals(
+            json_encode(['designId' => 3, 'designName' => 'Design 3', 'splitPercent' => 20], JSON_THROW_ON_ERROR),
+            $response->getContent()
+        );
     }
 }

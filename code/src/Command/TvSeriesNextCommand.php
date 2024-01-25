@@ -5,11 +5,9 @@ namespace App\Command;
 use App\Controller\TvSeriesController;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Style\SymfonyStyle;
 
 #[AsCommand(
     name: 'app:tvseries:next',
@@ -17,7 +15,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 )]
 class TvSeriesNextCommand extends Command
 {
-    public function __construct(private TvSeriesController $tvSeriesController)
+    public function __construct(private readonly TvSeriesController $tvSeriesController)
     {
         parent::__construct();
     }
@@ -25,8 +23,8 @@ class TvSeriesNextCommand extends Command
     protected function configure(): void
     {
         $this
-            ->addOption('date', null, InputOption::VALUE_REQUIRED, 'Date')
-            ->addOption('title', null, InputOption::VALUE_REQUIRED, 'Title')
+            ->addOption('date', 'd', InputOption::VALUE_REQUIRED, 'Date')
+            ->addOption('title', 't', InputOption::VALUE_REQUIRED, 'Title')
         ;
     }
 

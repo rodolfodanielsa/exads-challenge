@@ -2,13 +2,10 @@
 
 namespace App\Service;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 
 class PrimeNumberService
 {
-    private const ONE_IS_NOT_PRIME = 1;
     private const INITIAL_RANGE = 1;
     private const END_RANGE = 100;
     private const NUMBER_OF_MULTIPLES_TO_BE_PRIME = 2;
@@ -17,11 +14,11 @@ class PrimeNumberService
     public function detect(): string
     {
         $response = '';
-        for ($i = self::INITIAL_RANGE; $i <= self::END_RANGE; $i++) {
-            $response .= $i;
+        for ($checkNumber = self::INITIAL_RANGE; $checkNumber <= self::END_RANGE; $checkNumber++) {
+            $response .= $checkNumber;
 
-            $multiples = $this->getMultiples($i);
-            $response .= $this->getIsPrimeOrMultiplesText($i, $multiples);
+            $multiples = $this->getMultiples($checkNumber);
+            $response .= $this->getIsPrimeOrMultiplesText($checkNumber, $multiples);
 
             $response .= "\n";
         }
@@ -29,12 +26,12 @@ class PrimeNumberService
         return $response;
     }
 
-    private function getMultiples(mixed $i): array
+    private function getMultiples(int $checkNumber): array
     {
         $multiples = [];
 
-        for ($j = 1; $j <= $i; $j++) {
-            if ($i % $j === 0) {
+        for ($j = 1; $j <= $checkNumber; $j++) {
+            if ($checkNumber % $j === 0) {
                 $multiples[] = $j;
             }
         }

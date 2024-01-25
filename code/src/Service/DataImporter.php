@@ -2,7 +2,6 @@
 
 namespace App\Service;
 
-use App\Entity\TvSeries;
 use Doctrine\ORM\EntityManagerInterface;
 
 class DataImporter
@@ -21,19 +20,15 @@ class DataImporter
         $stmt = $connection->prepare($sql);
 
         foreach ($data as $item) {
-            echo "TV Series";
-            var_dump($item);
             $stmt->bindValue(1, $item['title']);
             $stmt->bindValue(2, $item['channel']);
             $stmt->bindValue(3, $item['gender']);
             $stmt->executeStatement();
 
             $tvSeriesId = $connection->lastInsertId();
-            var_dump($tvSeriesId);
-            echo "Intervals";
             foreach ($item['intervals'] as $interval) {
-                var_dump($interval);
                 $sqlIntervals = 'INSERT INTO tv_series_intervals (fk_tv_series, week_day, show_time) VALUES (?, ?, ?)';
+
                 $stmtIntervals = $connection->prepare($sqlIntervals);
                 $stmtIntervals->bindValue(1, $tvSeriesId);
                 $stmtIntervals->bindValue(2, $interval['week_day']);

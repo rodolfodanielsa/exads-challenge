@@ -12,23 +12,41 @@ class AsciiArrayService
     {
         $asciiArray = $this->getAsciiArray();
 
-        $asciiRandomChar = array_rand($asciiArray);
+        $removedCharFromArray = $this->removeCharFromArray($asciiArray);
 
-        $missingChar = $asciiArray[$asciiRandomChar];
-        unset($asciiArray[$asciiRandomChar]);
+        $missingChar = $this->returnMissingChar($asciiArray);
 
-        $missingCharDiff = array_diff($this->getAsciiArray(), $asciiArray);
-        $missingCharDiff = array_values($missingCharDiff)[0];
-
-        $response = 'Original ASCII Array: ' . implode(',', $this->getAsciiArray()) . "\n";
-        $response .= 'Removed Char: ' . $missingChar . "\n";
-        $response .= 'Removed Char after checking: ' . $missingCharDiff . "\n";
-
-        return $response;
+        return $this->generateResponse($removedCharFromArray, $missingChar);
     }
 
     private function getAsciiArray(): array
     {
         return range(self::INITIAL_CHAR, self::FINAL_CHAR);
+    }
+
+    private function generateResponse(mixed $missingChar, mixed $missingCharDiff): string
+    {
+        $response = 'Original ASCII Array: ' . implode(',', $this->getAsciiArray()) . "\n";
+        $response .= 'Randomly Removed Char: ' . $missingChar . "\n";
+        $response .= 'Missing Char after Validation: ' . $missingCharDiff . "\n";
+
+        return $response;
+    }
+
+    private function returnMissingChar(array $asciiArray): mixed
+    {
+        $missingCharDiff = array_diff($this->getAsciiArray(), $asciiArray);
+
+        return array_values($missingCharDiff)[0];
+    }
+
+    private function removeCharFromArray(array &$asciiArray): string
+    {
+        $asciiRandomChar = array_rand($asciiArray);
+
+        $missingChar = $asciiArray[$asciiRandomChar];
+        unset($asciiArray[$asciiRandomChar]);
+
+        return $missingChar;
     }
 }

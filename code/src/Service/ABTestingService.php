@@ -3,7 +3,6 @@
 namespace App\Service;
 
 use App\Manager\ABTestingManager;
-use Exads\ABTestData;
 
 class ABTestingService
 {

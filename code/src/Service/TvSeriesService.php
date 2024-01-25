@@ -4,6 +4,7 @@ namespace App\Service;
 
 use App\Repository\TvSeriesRepository;
 use DateTime;
+use Traversable;
 
 class TvSeriesService
 {
@@ -16,7 +17,7 @@ class TvSeriesService
     public function nextToAir(?DateTime $inputDate, ?string $title): string
     {
         if (!$inputDate) {
-            $inputDate = \DateTime::createFromFormat('U', time());
+            $inputDate = DateTime::createFromFormat('U', time());
         }
 
         $weekDay = $inputDate->format('w');
@@ -38,12 +39,13 @@ class TvSeriesService
 
     }
 
-    private function getNextShowsToAir(\Traversable $resultIterative): array
+    private function getNextShowsToAir(Traversable $resultIterative): array
     {
         $nextDayToAir = null;
         $nextShowsToAir = [];
         foreach ($resultIterative as $result) {
             $weekDayShowTime = $result['week_day'] . $result['show_time'];
+
             if (!$nextDayToAir) {
                 $nextDayToAir = $weekDayShowTime;
             }
@@ -91,7 +93,7 @@ class TvSeriesService
         return $response;
     }
 
-    private function getTvSeriesByCriteria(string $weekDay, string $showTime, ?string $title): ?\Traversable
+    private function getTvSeriesByCriteria(string $weekDay, string $showTime, ?string $title): ?Traversable
     {
         if ($title) {
             $titleExists = $this->tvSeriesRepository->findTvSeriesByTitle($title);

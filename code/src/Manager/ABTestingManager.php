@@ -3,18 +3,27 @@
 namespace App\Manager;
 
 use Exads\ABTestData;
+use Exception;
 
 class ABTestingManager
 {
-    private ABTestData $aBTestData;
+    private ?ABTestData $aBTestData;
 
     public function createABTestingByPromoId(int $promoId): void
     {
-        $this->aBTestData = new ABTestData($promoId);
+        try {
+            $this->aBTestData = new ABTestData($promoId);
+        } catch (Exception $e) {
+            $this->aBTestData = null;
+        }
     }
 
     public function getDesignByPercentage(int $randomNumber): array
     {
+        if ($this->aBTestData === NULL) {
+            return [];
+        }
+
         $designs = $this->getDesigns();
         $cumulativePercentage = 0;
 

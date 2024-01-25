@@ -3,14 +3,14 @@
 namespace App\Controller;
 
 use App\Service\ABTestingService;
-use Exads\ABTestData;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class ABTestingController extends AbstractController
 {
-    public function __construct(private ABTestingService $ABTestingService)
+    public function __construct(private readonly ABTestingService $ABTestingService)
     {
     }
 
@@ -18,6 +18,7 @@ class ABTestingController extends AbstractController
     public function index(int $promoId): Response
     {
         $response = $this->ABTestingService->getDesign($promoId);
-        return new Response(implode( ' ', $response));
+
+        return new JsonResponse($response);
     }
 }
