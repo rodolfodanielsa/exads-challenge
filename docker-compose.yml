@@ -1,0 +1,68 @@
+version: "3"
+services:
+  nginx:
+    image: wodby/nginx:latest
+    container_name: nginx
+    restart: always
+    ports:
+      - "8080:80"
+    volumes:
+      - ./code:/var/www/html
+      - ./nginx/:/etc/nginx/tmpl
+      - ./logs/:/var/log
+    environment:
+      NGINX_CONF_INCLUDE: '/etc/nginx/tmpl/site.conf'
+      NGINX_SERVER_ROOT: '/var/www/html/public/'
+    links:
+      - php
+    networks:
+      - tasklist
+
+  php:
+    image: ${PHP_VERSION}
+    container_name: php
+    ports:
+      - "9000:9000"
+    volumes:
+      - ./code:/var/www/html
+    environment:
+      PHP_XDEBUG: 1
+      PHP_XDEBUG_DEFAULT_ENABLE: 1
+      PHP_XDEBUG_REMOTE_AUTOSTART: 1
+      PHP_XDEBUG_REMOTE_CONNECT_BACK: 0
+      PHP_XDEBUG_REMOTE_PORT: 9003
+      PHP_IDE_CONFIG: "serverName=default"
+      PHP_XDEBUG_REMOTE_HOST: ${XDEBUG_REMOTE_HOST}
+      PHP_XDEBUG_CLIENT_HOST: ${XDEBUG_REMOTE_HOST}
+      PHP_XDEBUG_MODE: "debug"
+      PHP_XDEBUG_START_WITH_REQUEST: "yes"
+      PHP_XDEBUG_IDEKEY: "PHPSTORM"
+      DB_DATABASE: ${DB_DATABASE}
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+    links:
+      - mysql
+    networks:
+      - tasklist
+
+  mysql:
+    image: mariadb:10.5.8
+    container_name: mysql
+    ports:
+      - "3306:3306"
+    command: --default-authentication-plugin=mysql_native_password --explicit_defaults_for_timestamp
+    restart: always
+    working_dir: /var/www
+    volumes:
+      - ${MYSQL_VOLUME}
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    networks:
+      - tasklist
+
+networks:
+  tasklist:
+    driver: bridge
