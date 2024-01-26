@@ -1,6 +1,6 @@
 # Exads Challenge
 
-##### This project was originally started on https://github.com/rodolfodanielsa/exads.git.
+##### This project was originally started on https://github.com/rodolfodanielsa/exads-old.git.
 
 ## Setup
 
